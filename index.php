@@ -25,26 +25,26 @@ $show_button =     '
 
 
 $frases = array(array(
-	"encia emos super idor traer viv ex",
-	"sala ante lun ático pón izaje a",
-	"re imiento cog o a amiento aloj",
-	"igual des dad itario able vulner in",
-	"in ible mov perd able toc im",
-	"in ced itar felic retro idad er",
-	"ar mang amente re lent plea mar",
-	"ante cabell anti pon des ciclón ada",
-	"sub gust ino ado dis oso mar"
+	array("encia emos super idor traer viv ex","Prefijos en orden de aparición"),
+	array("sala ante lun ático pón izaje a","Sufijos en orden de aparición."),
+	array("re imiento cog o a amiento aloj","Lexemas en orden de aparición"),
+	array("igual des dad itario able vulner in","Lexemas en orden de aparición"),
+	array("in ible mov perd able toc im","Sufijos en orden de aparición."),
+	array("in ced itar felic retro idad er","Prefijos en orden de aparición."),
+	array("ar mang amente re lent plea mar","Lexemas en orden de aparición."),
+	array("ante cabell anti pon des ciclón ada","Prefijos en orden de aparición."),
+	array("sub gust ino ado dis oso mar","Sufijos en orden de aparición."),
 	
 ),array(
-	"er inter ío retro uza gent ced",
-	"ista inter re comun idad activ real",
-	"ecer tard a re grand en ar",
-	"ar able nombr in re ada carg",
-	"de ación invit dis ado ilustr gust",
-	"partir ío com ás uza im gent",
-	"hum udo des ión barb areda un",
-	"re sobre encia viv super iste volv",
-	"vis re ionar to ión tele pre"
+	array("er inter ío retro uza gent ced", "Prefijos en orden de aparición."),
+	array("ista inter re comun idad activ real", "Sufijos en orden de aparición."),
+	array("ecer tard a re grand en ar", "Lexemas en orden de aparición."),
+	array("ar able nombr in re ada carg", "Lexemas en orden de aparición."),
+	array("de ación invit dis ado ilustr gust", "Sufijos en orden de aparición"),
+	array("partir ío com ás uza im gent", "Prefijos en orden de aparición."),
+	array("hum udo des ión barb areda un", "Lexemas en orden de aparición."),
+	array("re sobre encia viv super iste volv", "Prefijos en orden de aparición."),
+	array("vis re ionar to ión tele pre", "Sufijos en orden de aparición.")
 ));
 
 $soluciones = array(
@@ -83,7 +83,8 @@ if (isset($_POST['respuesta-0-0'])) {
 	 $_POST["regladas"],
 	 $_POST["no-regladas"],
 	 $_POST["estudiar-edad"],
-	 $_POST["edad-dejar"]
+	 $_POST["edad-dejar"],
+	 $_POST["time"]
   );
 
   for ($j = 0; $j < 2; $j++) {
@@ -353,7 +354,7 @@ He leído la información
 
   </div>   
   <p>Este es la <mark>primera</mark> parte. Por favor <mark>esperen</mark> hasta que expliquemos todo.</p>
-
+  <input type="hidden" value="" name="time" id="time"></input>
 
 
 
@@ -362,8 +363,11 @@ He leído la información
   for ($i = 0; $i < count($frases); $i++) {
 	  for ($j = 0; $j < count($frases[$i]); $j++) {
 		  echo "<div class='border shadow p-3 mb-5 bg-body rounded' style='text-align: center; display: flex; flex-direction: column; justify-content: center; margin-bottom: 1%;'>";
+		  echo "<p>" . $frases[$i][$j][1] . "</p>";
+  		  echo "<div><button type='button' class='btn btn-primary tiempo'>Empezar tiempo</button></div>";
+
 		  echo "<div><button type='button' style='margin: 1%' id='" . ($i * count($frases[$i]) + $j) . "'  class='btn btn-primary show-button'>" . $show_button . "</button></div>";
-		  echo "<h3 style='padding: 1%;' class='question-text hidden'>". $frases[$i][$j] . "</h3>";
+		  echo "<h3 style='padding: 1%;' class='question-text hidden'>". $frases[$i][$j][0] . "</h3>";
 		  echo "<input name='soluciones-$i-$j' type='hidden' value='" . $soluciones[$i][$j] . "'></input>";
 		  echo "<input type='text' class='form-control answer-input' name='respuesta-$i-$j'></input>";
 		  echo "</div>";
@@ -393,9 +397,37 @@ He leído la información
   const oinputs = document.getElementsByClassName("oinput");
   const warning = document.getElementById("warning");
   const form = document.getElementById("main-form")
-
+  const times = document.getElementsByClassName("tiempo");
   var running = false;
 
+  var time = 0;
+  var startTime = false;
+
+  function startStopTime() {
+	startTime = !startTime;
+	
+	for (var i = 0; i <  times.length; i++) {
+		if (startTime)
+			times[i].innerText = "Parar tiempo";
+		else
+			times[i].innerText = "Empezar tiempo";
+
+	}
+  }
+  setInterval(countTime, 1000);
+  function countTime() {
+	  if (startTime)
+		time++;
+	  console.log(time);
+  }
+  
+
+  for (var i = 0; i < times.length; i++) {
+	times[i].addEventListener("click", startStopTime);
+  }
+  
+  
+  
   
   function changeClicked(event) {
 	  console.log(running);
@@ -441,7 +473,7 @@ He leído la información
     if (notFilled) {
       warning.classList.remove("hidden"); 
     } else {
-	  
+	  document.getElementById("time").value = time;
       form.submit();
     }
   }
