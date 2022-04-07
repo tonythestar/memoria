@@ -70,7 +70,7 @@ array(
 	"ionar to ión"
 ));
 
-if (isset($_POST['respuesta-0-0'])) {
+if (isset($_POST['soluciones-0-0'])) {
   $csv_line = array(
 	 $_POST["codigo"],
 	 $_POST["sexo"],
@@ -354,22 +354,29 @@ He leído la información
 
   </div>   
   <p>Este es la <mark>primera</mark> parte. Por favor <mark>esperen</mark> hasta que expliquemos todo.</p>
-  <input type="hidden" value="" name="time" id="time"></input>
+  
 
 
 
   <?php
-  
+  echo "<input type='hidden' value='' name='time' id='time'></input>";
+
   for ($i = 0; $i < count($frases); $i++) {
 	  for ($j = 0; $j < count($frases[$i]); $j++) {
-		  echo "<div class='border shadow p-3 mb-5 bg-body rounded' style='text-align: center; display: flex; flex-direction: column; justify-content: center; margin-bottom: 1%;'>";
-		  echo "<p>" . $frases[$i][$j][1] . "</p>";
-  		  echo "<div><button type='button' class='btn btn-primary tiempo'>Empezar tiempo</button></div>";
 
+		  echo "<div class='border shadow p-3 mb-5 bg-body rounded' style='text-align: center; display: flex; flex-direction: column; justify-content: center; margin-bottom: 1%;'>";
+  		  echo "<div><button type='button' class='btn btn-primary tiempo' id='" . ($i * count($frases[$i]) + $j) . "' disabled>Enviar</button></div>";
+
+		
 		  echo "<div><button type='button' style='margin: 1%' id='" . ($i * count($frases[$i]) + $j) . "'  class='btn btn-primary show-button'>" . $show_button . "</button></div>";
-		  echo "<h3 style='padding: 1%;' class='question-text hidden'>". $frases[$i][$j][0] . "</h3>";
+		  echo "<h5 class='question hidden'>" . $frases[$i][$j][1] . "</h5>";
+
+		  echo "<div class='question-text hidden'>";
+
+		  echo "<h3 style='padding: 1%;' class=''>". $frases[$i][$j][0] . "</h3>";
 		  echo "<input name='soluciones-$i-$j' type='hidden' value='" . $soluciones[$i][$j] . "'></input>";
-		  echo "<input type='text' class='form-control answer-input' name='respuesta-$i-$j'></input>";
+		  echo "</div>";
+		  echo "<input type='text' class='form-control answer-input' name='respuesta-$i-$j' disabled></input>";
 		  echo "</div>";
 	  }
 	  if ($i == 0) {
@@ -390,7 +397,9 @@ He leído la información
 
 <script type="text/javascript" defer>
   const showButtons = document.getElementsByClassName("show-button");
-  const texts = document.getElementsByClassName("question-text")
+  const texts = document.getElementsByClassName("question-text");
+  const questions = document.getElementsByClassName("question")
+  const finishs = document.getElementsByClassName("finish");
   var showButtonsClicked = Array(showButtons.length).fill(0);
   const inputs = document.getElementsByClassName("answer-input");
   const submitButton = document.getElementById("submit-button");
@@ -401,33 +410,17 @@ He leído la información
   var running = false;
 
   var time = 0;
+  var time_sum = 0;
   var startTime = false;
-
-  function startStopTime() {
-	startTime = !startTime;
-	
-	for (var i = 0; i <  times.length; i++) {
-		if (startTime)
-			times[i].innerText = "Parar tiempo";
-		else
-			times[i].innerText = "Empezar tiempo";
-
-	}
+  var time_arr = Array(times.length);
+  for (var i = 0; i < times.length; i++) {
+	  times[i].addEventListener("click", stopTime);
   }
   setInterval(countTime, 1000);
   function countTime() {
-	  if (startTime)
-		time++;
+      time++;
 	  console.log(time);
   }
-  
-
-  for (var i = 0; i < times.length; i++) {
-	times[i].addEventListener("click", startStopTime);
-  }
-  
-  
-  
   
   function changeClicked(event) {
 	  console.log(running);
@@ -441,20 +434,33 @@ He leído la información
 	  showButtons[i].disabled = true;
 	  texts[i].classList.remove("hidden");
 	  running = true;
-
+      if (showButtonsClicked[i] == 1) {
+		  time_arr[i] = time;
+	  }
 	  if (showButtonsClicked[i] >= 2) {
 		  showButtons[i].removeEventListener("click", changeClicked)
 	  }
 
 	  setTimeout(() => {
-		  inputs[i].disabled = false;
-		  if (showButtonsClicked[i] < 2)
+		  if (showButtonsClicked[i] < 2) {
 			showButtons[i].disabled = false;
+		  } else {
+			inputs[i].disabled = false;
+			times[i].disabled = false;
 
+			questions[i].classList.remove("hidden");
+		  }
 	  	  texts[i].classList.add("hidden");
 		  running = false;
 	  }, 5000)
 	  
+  }
+  function stopTime(event) {
+	  var i = event.target.id;
+	  time_arr[i] = time - time_arr[i];
+	  times[i].disabled = true;
+	  time_sum += time_arr[i];
+	  inputs[i].disabled = true;
   }
   var indexes = Array(inputs.length);
   for (var i = 0; i < showButtons.length; i++) {
@@ -473,7 +479,7 @@ He leído la información
     if (notFilled) {
       warning.classList.remove("hidden"); 
     } else {
-	  document.getElementById("time").value = time;
+	  document.getElementById("time").value = time_sum;
       form.submit();
     }
   }
