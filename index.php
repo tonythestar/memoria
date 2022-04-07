@@ -25,7 +25,7 @@ $show_button =     '
 
 
 $frases = array(array(
-	array("ar mang amente re lent plea mar","Prefijos en orden de aparición."), //test
+	array("ato ez a niñ sub ino mar","Lexemas en orden de aparición."), //test
 	array("encia emos super idor traer viv ex","Prefijos en orden de aparición"),
 	array("sala ante lun ático pón izaje a","Sufijos en orden de aparición."),
 	array("re imiento cog o a amiento aloj","Lexemas en orden de aparición"),
@@ -37,7 +37,7 @@ $frases = array(array(
 	array("sub gust ino ado dis oso mar","Sufijos en orden de aparición."),
 	
 ),array(
-	array("partir ío com ás uza im gent", "Prefijos en orden de aparición."), //test
+	array("sub ita eado mar ultra ino cas", "Prefijos en orden de aparición."), //test
 	array("er inter ío retro uza gent ced", "Prefijos en orden de aparición."),
 	array("ista inter re comun idad activ real", "Sufijos en orden de aparición."),
 	array("ecer tard a re grand en ar", "Lexemas en orden de aparición."),
@@ -352,8 +352,9 @@ He leído la información
 	<div id="emailHelp" class="form-text">Por favor introduce <b>solo un numero entero</b>. </div>
 
   </div>   
-  <p>Este es la <mark>primera</mark> parte. Por favor <mark>esperen</mark> hasta que expliquemos todo.</p>
-  
+  <hr></hr>
+  <h4>Este es la <mark>primera</mark> parte. Por favor <mark>esperen</mark> hasta que expliquemos todo. El primer test es solo de ejemplo.</h4>
+  <br></br>
 
 
 
@@ -362,26 +363,28 @@ He leído la información
 
   for ($i = 0; $i < count($frases); $i++) {
 	  for ($j = 0; $j < count($frases[$i]); $j++) {
-
 		  echo "<div class='border shadow p-3 mb-5 bg-body rounded' style='text-align: center; display: flex; flex-direction: column; justify-content: center; margin-bottom: 1%;'>";
-  		  echo "<div><button type='button' class='btn btn-primary tiempo' id='" . ($i * count($frases[$i]) + $j) . "' disabled>Enviar</button></div>";
 
 		
-		  echo "<div><button type='button' style='margin: 1%' id='" . ($i * count($frases[$i]) + $j) . "'  class='btn btn-primary show-button'>" . $show_button . "</button></div>";
+		  echo "<div><button type='button' style='margin-bottom: 1%;' id='" . ($i * count($frases[$i]) + $j) . "'  class='btn btn-primary show-button'>" . $show_button . "</button></div>";
 		  echo "<h5 class='question hidden'>" . $frases[$i][$j][1] . "</h5>";
 
 		  echo "<div class='question-text hidden'>";
 
-		  echo "<h3 style='padding: 1%;' class=''>". $frases[$i][$j][0] . "</h3>";
+		  echo "<h3 style='padding: 1%; word-spacing: 0.6em;' class=''>". $frases[$i][$j][0] . "</h3>";
 		  echo "<input name='soluciones-$i-$j' type='hidden' value='" . $soluciones[$i][$j] . "'></input>";
 		  echo "</div>";
 		  echo "<input type='text' class='form-control answer-input' disabled></input>";
 		  echo "<input type='hidden' class='answer' name='respuesta-$i-$j'></input>";
+   		  echo "<div style='margin-top: 1%'><button type='button' style='margin-left: auto; display: block;' class='btn btn-primary tiempo' id='" . ($i * count($frases[$i]) + $j) . "' disabled>Enviar</button></div>";
+
 		  echo "</div>";
 	  }
 	  if ($i == 0) {
-		  echo '<div class="alert alert-primary" id="warning" style="margin-top: 1%" role="alert">';
-		  echo "<p>Ahora empieza la segunda parate del test. Por favor siga las instrucciones.</p>";
+		  echo '<div class="" id="warning" style="margin-top: 1%" role="alert">';
+		  echo "<hr></hr>
+				<h4>Este es la <mark>segunda</mark> parte. Por favor <mark>esperen</mark> hasta que expliquemos todo. El primer test es solo de ejemplo.</h4>
+				<br></br>";
 		  echo "</div>";
 	  }
   }
