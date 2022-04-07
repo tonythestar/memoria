@@ -25,6 +25,7 @@ $show_button =     '
 
 
 $frases = array(array(
+	array("ar mang amente re lent plea mar","Prefijos en orden de aparición."), //test
 	array("encia emos super idor traer viv ex","Prefijos en orden de aparición"),
 	array("sala ante lun ático pón izaje a","Sufijos en orden de aparición."),
 	array("re imiento cog o a amiento aloj","Lexemas en orden de aparición"),
@@ -36,6 +37,7 @@ $frases = array(array(
 	array("sub gust ino ado dis oso mar","Sufijos en orden de aparición."),
 	
 ),array(
+	array("partir ío com ás uza im gent", "Prefijos en orden de aparición."), //test
 	array("er inter ío retro uza gent ced", "Prefijos en orden de aparición."),
 	array("ista inter re comun idad activ real", "Sufijos en orden de aparición."),
 	array("ecer tard a re grand en ar", "Lexemas en orden de aparición."),
@@ -50,6 +52,7 @@ $frases = array(array(
 $soluciones = array(
 array(
 	"super ex",
+	"super ex",
 	"ático izaje",
 	"cog aloj",
 	"igual vulner",
@@ -59,6 +62,7 @@ array(
 	"ante anti des",
 	"ino ado oso",
 ), array(
+	"inter retro",
 	"inter retro",
 	"ista idad",
 	"tard grand",
@@ -88,17 +92,12 @@ if (isset($_POST['soluciones-0-0'])) {
   );
 
   for ($j = 0; $j < 2; $j++) {
-	  for ($i = 0; $i < 9; $i++) {
+	  for ($i = 1; $i < 10; $i++) {
 		  array_push($csv_line, $_POST["respuesta-$j-$i"]);
 	  }
-	  for ($i = 0; $i < 9; $i++) {
+	  for ($i = 1; $i < 10; $i++) {
 		  array_push($csv_line, $_POST["soluciones-$j-$i"]);
 	  }
-  }
-
-  $sol = array();
-  for ($j = 0; $j < 2; $j++) {
-	  array_push($sol, $_POST["soluciones-$j-$i"]);
   }
 
   setcookie("submited", 'true', time()+60*60*24*365, "/");
@@ -376,7 +375,8 @@ He leído la información
 		  echo "<h3 style='padding: 1%;' class=''>". $frases[$i][$j][0] . "</h3>";
 		  echo "<input name='soluciones-$i-$j' type='hidden' value='" . $soluciones[$i][$j] . "'></input>";
 		  echo "</div>";
-		  echo "<input type='text' class='form-control answer-input' name='respuesta-$i-$j' disabled></input>";
+		  echo "<input type='text' class='form-control answer-input' disabled></input>";
+		  echo "<input type='hidden' class='answer' name='respuesta-$i-$j'></input>";
 		  echo "</div>";
 	  }
 	  if ($i == 0) {
@@ -398,6 +398,7 @@ He leído la información
 <script type="text/javascript" defer>
   const showButtons = document.getElementsByClassName("show-button");
   const texts = document.getElementsByClassName("question-text");
+  const answers = document.getElementsByClassName("answer");
   const questions = document.getElementsByClassName("question")
   const finishs = document.getElementsByClassName("finish");
   var showButtonsClicked = Array(showButtons.length).fill(0);
@@ -412,7 +413,7 @@ He leído la información
   var time = 0;
   var time_sum = 0;
   var startTime = false;
-  var time_arr = Array(times.length);
+  var time_arr = Array(times.length, 0);
   for (var i = 0; i < times.length; i++) {
 	  times[i].addEventListener("click", stopTime);
   }
@@ -461,6 +462,7 @@ He leído la información
 	  times[i].disabled = true;
 	  time_sum += time_arr[i];
 	  inputs[i].disabled = true;
+	  answers[i].value = inputs[i].value;
   }
   var indexes = Array(inputs.length);
   for (var i = 0; i < showButtons.length; i++) {
@@ -479,7 +481,7 @@ He leído la información
     if (notFilled) {
       warning.classList.remove("hidden"); 
     } else {
-	  document.getElementById("time").value = time_sum;
+	  document.getElementById("time").value = time_sum - time_arr[0];
       form.submit();
     }
   }
